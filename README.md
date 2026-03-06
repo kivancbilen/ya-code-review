@@ -1,6 +1,6 @@
 # ya-code-review
 
-Semi-formal reasoning code review agent powered by Claude. Uses a 5-phase methodology — premises, execution tracing, claims, falsification, and findings — to produce evidence-backed code review findings.
+Semi-formal reasoning code review agent powered by Claude. Uses a 5-phase methodology — premises, execution tracing, claims, falsification, and findings — to produce evidence-backed code review findings. Inspired by (https://arxiv.org/pdf/2603.01896)
 
 ## Features
 
