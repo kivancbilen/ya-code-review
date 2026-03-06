@@ -72,6 +72,32 @@ class ParsedDiff:
         return "\n".join(lines)
 
 
+def _parse_individual_files(diff_text: str):
+    """Parse each file diff individually, skipping files that fail.
+
+    Returns a flat list of PatchedFile objects, or None if nothing parsed.
+    """
+    import re
+
+    # Split on 'diff --git' boundaries
+    parts = re.split(r"(?=^diff --git )", diff_text, flags=re.MULTILINE)
+    parts = [p for p in parts if p.strip().startswith("diff --git")]
+
+    if not parts:
+        return None
+
+    all_files = []
+    for part in parts:
+        try:
+            ps = unidiff.PatchSet.from_string(part.rstrip() + "\n")
+            all_files.extend(ps)
+        except Exception:
+            # Skip files that can't be parsed (e.g. empty hunks, binary files)
+            continue
+
+    return all_files if all_files else None
+
+
 def parse_diff(diff_text: str) -> ParsedDiff:
     """Parse a unified diff string into structured data."""
     if not diff_text.strip():
@@ -80,8 +106,11 @@ def parse_diff(diff_text: str) -> ParsedDiff:
     try:
         patch_set = unidiff.PatchSet.from_string(diff_text)
     except Exception:
-        # Fall back to returning raw diff if parsing fails
-        return ParsedDiff(raw_diff=diff_text)
+        # unidiff can fail on diffs with empty hunks or trailing newlines.
+        # Fall back to parsing each file's diff individually.
+        patch_set = _parse_individual_files(diff_text)
+        if patch_set is None:
+            return ParsedDiff(raw_diff=diff_text)
 
     files = []
     for patched_file in patch_set:
