@@ -1,0 +1,41 @@
+{
+  "name": "ya-code-review",
+  "version": "0.1.0",
+  "description": "Semi-formal reasoning code review agent with MCP support — powered by Claude",
+  "keywords": [
+    "code-review",
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "ai",
+    "static-analysis",
+    "fault-localization",
+    "patch-equivalence"
+  ],
+  "author": "Kivanc Bilen",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kivancbilen/ya-code-review.git"
+  },
+  "type": "module",
+  "bin": {
+    "ya-code-review": "./bin/cli.mjs"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "templates/",
+    "pyproject.toml",
+    "README.md"
+  ],
+  "scripts": {
+    "postinstall": "pip install -e . 2>/dev/null || pip3 install -e . 2>/dev/null || echo 'Warning: Python install failed. Run: pip install -e .'",
+    "mcp": "python -m fb_review_agent.mcp_server",
+    "review": "fb-review review",
+    "coverage": "fb-review coverage"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

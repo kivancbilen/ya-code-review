@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ya-code-review"
+version = "0.1.0"
+description = "Semi-formal reasoning code review agent with MCP support — powered by Claude"
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=0.39.0",
+    "click>=8.1",
+    "rich>=13.0",
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+    "unidiff>=0.7",
+    "mcp>=1.0.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/fb_review_agent"]
+
+[project.scripts]
+fb-review = "fb_review_agent.cli:cli"
+ya-code-review-mcp = "fb_review_agent.mcp_server:main"
